@@ -96,8 +96,8 @@ grep "404" data/access.log | cut -d' ' -f1 | sort | uniq -c | sort -nr
 Soient les deux commandes suivantes :
 
 ```bash
-docker --version
-docker compose version
+sudo docker --version
+sudo docker compose version
 ```
 
 - Quelle différence entre Docker et Docker Compose ?
@@ -107,10 +107,10 @@ docker compose version
 Tester les commandes suivantes :
 
 ```bash
-docker run hello-world
-docker images
-docker ps
-docker ps -a
+sudo docker run hello-world
+sudo docker images
+sudo docker ps
+sudo docker ps -a
 ```
 
 - Quelle est la différence entre une image Docker et un conteneur Docker ?
@@ -121,7 +121,7 @@ docker ps -a
 Exécuter la commande suivante :
 
 ```bash
-docker run -it ubuntu bash
+sudo docker run -it ubuntu bash
 ```
 
 Dans le conteneur :
@@ -141,9 +141,9 @@ exit
 Exécuter les commandes suivantes :
 
 ```bash
-docker run -d --name linux-test ubuntu sleep 3600
-docker ps
-docker exec -it linux-test bash
+sudo docker run -d --name linux-test ubuntu sleep 3600
+sudo docker ps
+sudo docker exec -it linux-test bash
 ```
 
 Dans le conteneur :
@@ -157,10 +157,10 @@ exit
 Puis :
 
 ```bash
-docker inspect linux-test
-docker logs linux-test
-docker stop linux-test
-docker rm linux-test
+sudo docker inspect linux-test
+sudo docker logs linux-test
+sudo docker stop linux-test
+sudo docker rm linux-test
 ```
 
 - Quelle est la différence entre `docker run` et `docker exec` lorsqu'on souhaite accéder à un terminal dans un conteneur ?
@@ -194,10 +194,10 @@ services:
 Puis, exécuter les commandes suivantes :
 
 ```bash
-docker compose -f compose-test.yaml up -d
-docker compose -f compose-test.yaml ps
-docker compose -f compose-test.yaml exec linux1 bash
-docker compose -f compose-test.yaml down
+sudo docker compose -f compose-test.yaml up -d
+sudo docker compose -f compose-test.yaml ps
+sudo docker compose -f compose-test.yaml exec linux1 bash
+sudo docker compose -f compose-test.yaml down
 ```
 
 > **Remarque :** `-d` signifie detached (« en arrière-plan »).
@@ -219,8 +219,8 @@ L'environnement contiendra :
 Depuis `tp1`, exécuter :
 
 ```bash
-docker compose pull
-docker images
+sudo docker compose pull
+sudo docker images
 ```
 
 > **Remarque :** Lors de la première utilisation, Docker télécharge l'image Hadoop depuis un registre Docker si elle n'est pas déjà présente. Une fois téléchargée, elle reste stockée localement.
@@ -228,8 +228,8 @@ docker images
 ## C.2. Démarrer le cluster
 
 ```bash
-docker compose up -d
-docker compose ps
+sudo docker compose up -d
+sudo docker compose ps
 ```
 
 Vous devez retrouver `namenode`, `datanode1` et `datanode2`.
@@ -237,8 +237,8 @@ Vous devez retrouver `namenode`, `datanode1` et `datanode2`.
 ## C.3. Consulter les logs
 
 ```bash
-docker compose logs namenode
-docker compose logs datanode1
+sudo docker compose logs namenode
+sudo docker compose logs datanode1
 ```
 
 - Pourquoi les logs sont-ils importants lorsqu'un service Big Data ne démarre pas correctement ?
@@ -246,7 +246,7 @@ docker compose logs datanode1
 ## C.4. Entrer dans le NameNode
 
 ```bash
-docker compose exec namenode bash
+sudo docker compose exec namenode bash
 java -version
 hdfs version
 ```
