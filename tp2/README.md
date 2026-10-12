@@ -1,7 +1,8 @@
-# TP2 — HDFS : stockage distribué
+# TP2 Big Data — HDFS : stockage distribué
 
-**Module : Big Data**  
-**Durée : 3 heures**  
+
+**FST-SBZ — A.U. 2026-2027 — 2ème MRSI**
+**Dr. -Ing. Houda BENALI**  
 **Prérequis : TP1 validé — Linux, Docker, Docker Compose et cluster Hadoop opérationnel**
 
 ## 1. Objectifs
@@ -39,14 +40,14 @@
 Le NameNode gère notamment l'espace de noms et les métadonnées. Les DataNodes stockent les blocs de données. Les clients utilisent le NameNode pour les métadonnées puis les DataNodes pour les données.
 
 # Partie A — Comprendre HDFS
-**Durée indicative : 20 min**
+
 
 ## A1. Vérifier que le cluster fonctionne
 
 Depuis la racine du dépôt :
 
 ```bash
-docker compose -f tp1/compose.yaml ps
+sudo docker compose -f tp1/compose.yaml ps
 ```
 
 ### Question 1
@@ -56,13 +57,13 @@ Quels conteneurs sont en cours d'exécution ? Quel conteneur joue le rôle du Na
 Affichez les derniers messages du NameNode :
 
 ```bash
-docker compose -f tp1/compose.yaml logs --tail=20 namenode
+sudo docker compose -f tp1/compose.yaml logs --tail=20 namenode
 ```
 
 Puis ceux d'un DataNode :
 
 ```bash
-docker compose -f tp1/compose.yaml logs --tail=20 datanode1
+sudo docker compose -f tp1/compose.yaml logs --tail=20 datanode1
 ```
 
 Que remarquez-vous ?
@@ -70,7 +71,7 @@ Que remarquez-vous ?
 ## A2. Entrer dans le NameNode
 
 ```bash
-docker exec -it namenode bash
+sudo docker exec -it namenode bash
 ```
 
 Vérifiez la version :
@@ -83,12 +84,11 @@ hadoop version
 Quelle version de Hadoop est utilisée ?
 
 ### Question 4
-Pourquoi exécute-t-on les commandes `hdfs dfs` depuis le conteneur NameNode dans ce TP ?
+Pourquoi exécute-t-on les commandes `hdfs dfs` depuis le conteneur hadoop-namenode dans ce TP ?
 
 > `hdfs dfs` fournit une interface de commandes de type système de fichiers pour HDFS, avec des opérations proches de `ls`, `mkdir`, `cp`, `mv`, `rm`, etc.
 
 # Partie B — Explorer HDFS
-**Durée indicative : 25 min**
 
 Toutes les commandes de cette partie sont exécutées dans le conteneur `namenode`.
 
@@ -132,12 +132,6 @@ hdfs dfs -ls -R /user/<nom>
 ### Question 8
 Quelle structure de répertoires avez-vous obtenue ?
 
-```text
-/user/<nom>/
-├── raw/
-├── processed/
-└── backup/
-```
 
 ## B3. Faire le parallèle avec Unix
 
@@ -156,12 +150,12 @@ Complétez :
 Pourquoi Hadoop propose-t-il des commandes qui ressemblent autant aux commandes Unix ?
 
 # Partie C — Transférer des données vers HDFS
-**Durée indicative : 40 min**
+
 
 Nous utilisons le fichier :
 
 ```text
-tp2/data/access.log
+tp1/data/access.log
 ```
 
 ## C1. Observer le fichier local
@@ -169,9 +163,9 @@ tp2/data/access.log
 Depuis la racine du dépôt :
 
 ```bash
-wc -l tp2/data/access.log
-head tp2/data/access.log
-tail tp2/data/access.log
+wc -l tp1/data/access.log
+head tp1/data/access.log
+tail tp1/data/access.log
 ```
 
 ### Question 10
@@ -186,24 +180,21 @@ Pourquoi ce type de fichier constitue-t-il un exemple réaliste de donnée pouva
 ## C2. Copier le fichier dans le conteneur NameNode
 
 ```bash
-docker cp tp2/data/access.log namenode:/tmp/access.log
+sudo docker cp tp1/data/access.log hadoop-namenode:/tmp/access.log
 ```
 
 Vérifiez :
 
 ```bash
-docker exec namenode ls -lh /tmp/access.log
+sudo docker exec hadoop-namenode ls -lh /tmp/access.log
 ```
-
-### Question 13
-Pourquoi avons-nous besoin de `docker cp` avant d'utiliser `hdfs dfs -put` ?
 
 ## C3. Déposer le fichier dans HDFS
 
 Entrez dans le NameNode :
 
 ```bash
-docker exec -it namenode bash
+sudo docker exec -it hadoop-namenode bash
 ```
 
 Puis :
@@ -217,6 +208,9 @@ Vérifiez :
 ```bash
 hdfs dfs -ls /user/<nom>/raw
 ```
+
+### Question 13
+Pourquoi avons-nous besoin de `docker cp` avant d'utiliser `hdfs dfs -put` ?
 
 ### Question 14
 Quelle différence entre `cp` et `hdfs dfs -put` ?
@@ -249,7 +243,6 @@ ls -lh /tmp/hdfs-download/
 Quelle est la différence entre `hdfs dfs -put` et `hdfs dfs -get` ?
 
 # Partie D — Manipuler les fichiers HDFS
-**Durée indicative : 30 min**
 
 ## D1. Copier un fichier
 
@@ -522,21 +515,7 @@ hdfs dfs -help
 hdfs dfs -help ls
 ```
 
-# 4. Travail attendu
-
-À la fin du TP, vous devez être capables de montrer :
-
-1. que votre cluster Hadoop fonctionne ;
-2. que vous savez créer une arborescence HDFS ;
-3. que vous savez envoyer un fichier local vers HDFS ;
-4. que vous savez lire et récupérer un fichier HDFS ;
-5. que vous savez copier, déplacer et supprimer des fichiers HDFS ;
-6. que vous savez expliquer les blocs ;
-7. que vous savez expliquer la réplication ;
-8. que vous savez utiliser `hdfs fsck` pour observer les blocs ;
-9. que vos logs sont déposés dans `/user/<nom>/raw/access.log`.
-
-# 5. Règles de travail
+# 4. Règles de travail
 
 - Ne modifiez pas `tp1/compose.yaml` pour ce TP.
 - Ne recréez pas les conteneurs si le cluster du TP1 fonctionne déjà.
