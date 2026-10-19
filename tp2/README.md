@@ -1,8 +1,10 @@
 # TP2 Big Data — HDFS : stockage distribué
 
 
-**FST-SBZ — A.U. 2026-2027 — 2ème MRSI**
+**FST-SBZ — A.U. 2026-2027 — 2ème MRSI** 
+
 **Dr. -Ing. Houda BENALI**  
+
 **Prérequis : TP1 validé — Linux, Docker, Docker Compose et cluster Hadoop opérationnel**
 
 ## 1. Objectifs
@@ -29,12 +31,12 @@
                      │   métadonnées HDFS   │
                      └──────────┬───────────┘
                                 │
-                 ┌──────────────┴──────────────┐
-                 │                             │
-        ┌────────▼────────┐          ┌─────────▼───────┐
-        │    DataNode 1   │          │    DataNode 2   │
-        │  blocs de données│         │  blocs de données│
-        └─────────────────┘          └─────────────────┘
+                 ┌──────────────┴───────────────┐
+                 │                              │
+        ┌────────▼─────────┐          ┌─────────▼────────┐
+        │    DataNode 1    │          │    DataNode 2    │
+        │  blocs de données│          │  blocs de données│
+        └──────────────────┘          └──────────────────┘
 ```
 
 Le NameNode gère notamment l'espace de noms et les métadonnées. Les DataNodes stockent les blocs de données. Les clients utilisent le NameNode pour les métadonnées puis les DataNodes pour les données.
@@ -316,7 +318,6 @@ hdfs dfs -rm -r /chemin/du/repertoire
 Pourquoi `-rm -r` est-il plus dangereux que `-rm` ?
 
 # Partie E — Blocs et réplication
-**Durée indicative : 40 min**
 
 ## E1. Observer la taille de bloc
 
@@ -398,20 +399,10 @@ Vérifiez à nouveau.
 Qu'est-ce qui change dans les informations retournées par `fsck` ?
 
 ### Question 30
-Expliquez le lien entre :
+Expliquez le lien entre : fichier, bloc(s), réplication et DataNodes
 
-```text
-fichier
-   ↓
-bloc(s)
-   ↓
-réplication
-   ↓
-DataNodes
-```
 
 # Partie F — Mini-activité Big Data : préparer les logs
-**Durée indicative : 20 min**
 
 ## F1. Organiser les données
 
@@ -443,6 +434,7 @@ Puis :
 hdfs dfs -cat /user/<nom>/raw/access.log | wc -l
 hdfs dfs -cat /user/<nom>/raw/access.log | grep " 404 " | wc -l
 hdfs dfs -cat /user/<nom>/raw/access.log | grep " 500 " | wc -l
+...
 ```
 
 ### Question 32
@@ -454,7 +446,6 @@ Quelle limite importante présente cette approche ?
 > **Indice :** demandez-vous où sont réellement exécutés `grep` et `wc`, et si cette méthode exploite déjà le calcul distribué.
 
 # Partie G — Synthèse et préparation du TP3
-**Durée indicative : 5 min**
 
 ```text
 Machine Linux
@@ -484,7 +475,7 @@ Pourquoi HDFS est-il adapté au stockage de gros volumes de données ?
 Pourquoi HDFS seul ne suffit-il pas pour réaliser un calcul distribué ?
 
 ### Question 37
-Quelle technologie allons-nous utiliser au TP3 pour traiter les données de manière distribuée ?
+Quel composant allons-nous utiliser au TP3 pour traiter les données de manière distribuée ?
 
 # 3. Commandes essentielles à retenir
 
@@ -520,7 +511,6 @@ hdfs dfs -help ls
 - Ne modifiez pas `tp1/compose.yaml` pour ce TP.
 - Ne recréez pas les conteneurs si le cluster du TP1 fonctionne déjà.
 - Utilisez votre propre répertoire `/user/<nom>/`.
-- Ne supprimez pas les données des autres étudiants.
 - N'utilisez pas `docker compose down -v` pendant le TP.
 - En cas de problème, vérifiez :
   ```bash
