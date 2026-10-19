@@ -28,7 +28,7 @@ sudo apt install -y git
 ## TP1
 
 ```bash
-git clone https://github.com/houdafst/TP_Big_Data_MRSI.git
+git clone https://github.com/houda-benali/TP_Big_Data_MRSI.git
 cd TP_Big_Data_MRSI
 ```
 Voir `tp1/README.md` pour le sujet complet.
