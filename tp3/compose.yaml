@@ -1,0 +1,121 @@
+services:
+
+  # ==================================================
+  # NAMENODE + RESOURCEMANAGER
+  # ==================================================
+  namenode:
+    image: apache/hadoop:3.5.0
+    container_name: hadoop-namenode
+    hostname: namenode
+    user: root
+
+    ports:
+      - "9870:9870"   # Interface Web NameNode
+      - "8020:8020"   # HDFS RPC
+      - "8088:8088"   # Interface Web ResourceManager
+
+    volumes:
+      - namenode_data:/data/name
+
+      # Configuration HDFS
+      - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+
+      # Configuration YARN et MapReduce
+      - ./config/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml:ro
+      - ./config/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml:ro
+
+      # Script de démarrage
+      - ./scripts/start-namenode.sh:/scripts/start-namenode.sh:ro
+
+    command: ["/bin/bash", "/scripts/start-namenode.sh"]
+
+    networks:
+      - hadoop
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # DATANODE 1 + NODEMANAGER 1
+  # ==================================================
+  datanode1:
+    image: apache/hadoop:3.5.0
+    container_name: hadoop-datanode1
+    hostname: datanode1
+    user: root
+
+    volumes:
+      - datanode1_data:/data/data
+
+      # Configuration HDFS
+      - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+
+      # Configuration YARN et MapReduce
+      - ./config/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml:ro
+      - ./config/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml:ro
+
+      # Script de démarrage
+      - ./scripts/start-datanode.sh:/scripts/start-datanode.sh:ro
+
+    command: ["/bin/bash", "/scripts/start-datanode.sh"]
+
+    depends_on:
+      - namenode
+
+    networks:
+      - hadoop
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # DATANODE 2 + NODEMANAGER 2
+  # ==================================================
+  datanode2:
+    image: apache/hadoop:3.5.0
+    container_name: hadoop-datanode2
+    hostname: datanode2
+    user: root
+
+    volumes:
+      - datanode2_data:/data/data
+
+      # Configuration HDFS
+      - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+
+      # Configuration YARN et MapReduce
+      - ./config/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml:ro
+      - ./config/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml:ro
+
+      # Script de démarrage
+      - ./scripts/start-datanode.sh:/scripts/start-datanode.sh:ro
+
+    command: ["/bin/bash", "/scripts/start-datanode.sh"]
+
+    depends_on:
+      - namenode
+
+    networks:
+      - hadoop
+
+    restart: unless-stopped
+
+
+# ==================================================
+# VOLUMES
+# ==================================================
+volumes:
+  namenode_data:
+  datanode1_data:
+  datanode2_data:
+
+
+# ==================================================
+# NETWORK
+# ==================================================
+networks:
+  hadoop:
+    driver: bridge
