@@ -1,0 +1,188 @@
+services: 
+  nn1: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_nn1 
+    hostname: nn1 
+    user: root 
+    ports: 
+           - "9871:9870" 
+           - "8021:8020" 
+    volumes: 
+           - nn1_data:/data/name 
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro 
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro 
+           - ./scripts/start-namenode.sh:/scripts/start-namenode.sh:ro 
+    command: 
+           - /bin/bash 
+           - /scripts/start-namenode.sh 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+
+  nn2: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_nn2 
+    hostname: nn2 
+    user: root 
+    ports: 
+           - "9872:9870" 
+           - "8022:8020" 
+    volumes: 
+           - nn2_data:/data/name 
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro 
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro 
+           - ./scripts/start-namenode.sh:/scripts/start-namenode.sh:ro 
+    command: 
+           - /bin/bash 
+           - /scripts/start-namenode.sh 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+
+  dni1: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_dni1 
+    hostname: dni1
+    user: root 
+    volumes: 
+           - dni1_data:/data/data 
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro 
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro 
+           - ./scripts/start-datanode.sh:/scripts/start-datanode.sh:ro 
+    command: 
+           - /bin/bash 
+           - /scripts/start-datanode.sh 
+    depends_on: 
+           - nn1 
+           - nn2 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+
+  dni2: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_dni2 
+    hostname: dni2 
+    user: root 
+    volumes: 
+           - dni2_data:/data/data 
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro 
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro 
+           - ./scripts/start-datanode.sh:/scripts/start-datanode.sh:ro 
+    command: 
+           - /bin/bash 
+           - /scripts/start-datanode.sh 
+    depends_on: 
+           - nn1 
+           - nn2 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+  
+  dni3: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_dni3 
+    hostname: dni3 
+    user: root 
+    volumes: 
+           - dni3_data:/data/data 
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro 
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro 
+           - ./scripts/start-datanode.sh:/scripts/start-datanode.sh:ro 
+    command: 
+           - /bin/bash 
+           - /scripts/start-datanode.sh 
+    depends_on: 
+           - nn1 
+           - nn2 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+  
+  dni4: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_dni4 
+    hostname: dni4 
+    user: root 
+    volumes: 
+           - dni4_data:/data/data 
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro 
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro 
+           - ./scripts/start-datanode.sh:/scripts/start-datanode.sh:ro 
+    command: 
+           - /bin/bash 
+           - /scripts/start-datanode.sh 
+    depends_on: 
+           - nn1 
+           - nn2 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+  
+  jnode1: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_jnode1 
+    hostname: jnode1 
+    user: root 
+    volumes:
+           - jnode1_data:/data/journal
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+           - ./scripts/start-journalnode.sh:/scripts/start-journalnode.sh:ro
+    command:
+           - /bin/bash
+           - /scripts/start-journalnode.sh 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+
+  jnode2: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_jnode2 
+    hostname: jnode2 
+    user: root 
+    volumes:
+           - jnode2_data:/data/journal
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+           - ./scripts/start-journalnode.sh:/scripts/start-journalnode.sh:ro
+    command:
+           - /bin/bash
+           - /scripts/start-journalnode.sh 
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+
+  jnode3: 
+    image: apache/hadoop:3.5.0 
+    container_name: hd_jnode3 
+    hostname: jnode3 
+    user: root 
+    volumes:
+           - jnode3_data:/data/journal
+           - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+           - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+           - ./scripts/start-journalnode.sh:/scripts/start-journalnode.sh:ro
+    command:
+           - /bin/bash
+           - /scripts/start-journalnode.sh
+    networks: 
+           - hadoop2 
+    restart: unless-stopped
+
+volumes: 
+  nn1_data: 
+  nn2_data: 
+  dni1_data: 
+  dni2_data: 
+  dni3_data: 
+  dni4_data:
+  jnode1_data:
+  jnode2_data:
+  jnode3_data:
+
+
+networks: 
+  hadoop2: 
+         name: hadoop2 
+         driver: bridge
